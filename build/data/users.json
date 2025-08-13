@@ -1,0 +1,44 @@
+[
+    {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "address": "123 Main St, Anytown, USA",
+        "phone": "555-1234"
+    },
+    {
+        "id": 2,
+        "name": "Jane Smith",
+        "email": "jane.smith@example.com",
+        "address": "456 Elm St, Anytown, USA",
+        "phone": "555-5678"
+    },
+    {
+        "id": 3,
+        "name": "Bob Johnson",
+        "email": "bob.johnson@example.com",
+        "address": "789 Oak St, Anytown, USA",
+        "phone": "555-9012"
+    },
+    {
+        "id": 4,
+        "name": "Abbott",
+        "email": "abbott.ranger@xyz.com",
+        "address": "980 Province Lane, Baltimore",
+        "phone": "555-8800"
+    },
+    {
+        "id": 5,
+        "name": "Kyle Panry",
+        "email": "kyle.pan@example.com",
+        "address": "1234 Main St, Springfield",
+        "phone": "555-1234"
+    },
+    {
+        "id": 6,
+        "name": "Dinu",
+        "email": "test@test.com",
+        "address": "890 Ave Drive, Omaha",
+        "phone": "768-0090"
+    }
+]
