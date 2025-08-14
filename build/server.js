@@ -7,6 +7,7 @@ const mcp_js_1 = require("@modelcontextprotocol/sdk/server/mcp.js");
 const stdio_js_1 = require("@modelcontextprotocol/sdk/server/stdio.js");
 const zod_1 = require("zod");
 const promises_1 = __importDefault(require("node:fs/promises"));
+const types_js_1 = require("@modelcontextprotocol/sdk/types.js");
 const server = new mcp_js_1.McpServer({
     name: "Test Server",
     version: "1.0.0",
@@ -46,6 +47,63 @@ server.tool("create-user", "Create a new User in the database", {
                 {
                     type: "text",
                     text: "An error occurred while creating the user.",
+                },
+            ],
+        };
+    }
+});
+server.tool("create-random-user", "Create a random user", {
+    title: "Create Random User",
+    readOnlyHint: false,
+    destructiveHint: false,
+    idempotentHint: false,
+    openWorldHint: true,
+}, async () => {
+    const res = await server.server.request({
+        method: "sampling/createMessage",
+        params: {
+            messages: [
+                {
+                    role: "user",
+                    content: {
+                        type: "text",
+                        text: "Create a random user with a realistic name, email, address, and phone number. Return this data as a JSON object with no other text or formatter so it can be used with JSON.parse",
+                    },
+                },
+            ],
+            maxTokens: 1000,
+        },
+    }, types_js_1.CreateMessageResultSchema);
+    if (res.content.type !== "text") {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: "Failed to generate user data",
+                },
+            ],
+        };
+    }
+    try {
+        const fakeUser = JSON.parse(res.content.text
+            .trim()
+            .replace(/^```json/, "")
+            .replace(/```$/, "")
+            .trim());
+        const id = await createUser(fakeUser);
+        return {
+            content: [{
+                    type: "text",
+                    text: `Random user created successfully with ID: ${id}`,
+                }]
+        };
+    }
+    catch {
+        return {
+            content: [
+                {
+                    type: "text",
+                    text: "Failed to generate user data",
                 },
             ],
         };
