@@ -54,6 +54,31 @@ server.tool(
   }
 );
 
+server.resource(
+  "users",
+  "users://all",
+  {
+    description: "Get all users data from the database",
+    title: "Get all users",
+    MimeType: "application/json",
+  },
+  async (uri) => {
+    const users = await import("./data/users.json", {
+      with: { type: "json" },
+    }).then((m) => m.default);
+    
+    return {
+      contents: [
+        {
+          uri: uri.href,
+          text: JSON.stringify(users),
+          mimeType: "application/json",
+        },
+      ],
+    };
+  }
+);
+
 async function createUser(user: {
   name: string;
   email: string;
