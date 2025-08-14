@@ -51,6 +51,71 @@ server.tool("create-user", "Create a new User in the database", {
         };
     }
 });
+server.resource("users", "users://all", {
+    title: "Get all users",
+    description: "Get all users data from the database",
+    mimeType: "application/json",
+}, async (uri) => {
+    const users = await import("./data/users.json", {
+        with: { type: "json" },
+    }).then((m) => m.default);
+    return {
+        contents: [
+            {
+                uri: uri.href,
+                text: JSON.stringify(users),
+                mimeType: "application/json",
+            },
+        ],
+    };
+});
+server.resource("user-details", new mcp_js_1.ResourceTemplate("users://{id}/profile", {
+    list: undefined,
+}), {
+    description: "Get a user data from the database",
+    title: "Users details",
+    mimeType: "application/json",
+}, async (uri, { id }) => {
+    const users = await import("./data/users.json", {
+        with: { type: "json" },
+    }).then((m) => m.default);
+    const user = users.find((user) => user.id === parseInt(id));
+    if (user == null) {
+        return {
+            contents: [
+                {
+                    uri: uri.href,
+                    text: JSON.stringify({ error: "User not found" }),
+                    mimeType: "application/json",
+                },
+            ],
+        };
+    }
+    return {
+        contents: [
+            {
+                uri: uri.href,
+                text: JSON.stringify(user),
+                mimeType: "application/json",
+            },
+        ],
+    };
+});
+server.prompt("generate-fake-user", "Generate a fake user based on given name", {
+    name: zod_1.z.string(),
+}, ({ name }) => {
+    return {
+        messages: [
+            {
+                role: "user",
+                content: {
+                    type: "text",
+                    text: `Generate a fake user with the name "${name}". The user should have a realistic email, address, and phone number.`,
+                },
+            },
+        ],
+    };
+});
 async function createUser(user) {
     // Simulate creating a new user in a database
     const users = await import("./data/users.json", {
